@@ -1,4 +1,4 @@
-# DVC Tutorial
+# DVC Tutorial: Part 1 - Versioning large files
 
 ## Basics
 
