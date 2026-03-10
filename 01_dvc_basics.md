@@ -33,48 +33,6 @@ conda install -c conda-forge dvc
 
 ```
 
-## Repository Setup
-
-First, create a new folder for your repository in your preferred location and
-navigate into it:
-
-```sh
-mkdir gathering_dvc
-cd gathering_dvc
-
-```
-
-Initialize a Git repository by running:
-
-```sh
-git init 
-
-```
-
-Initialize DVC:
-
-```sh
-dvc init 
-
-```
-
-This command creates a few hidden files that configure your DVC project. Have a
-look at them:
-
-```sh
-ls -l .dvc 
-
-```
-
-DVC automatically stages these newly added configuration files to your next Git
-commit. Let's check the status and commit them:
-
-```sh
-git status
-git commit -m "Initialize DVC"
-
-```
-
 ## Python Environment Setup
 
 Before generating our data, we need an environment with the right packages.
@@ -107,6 +65,52 @@ pip install pandas matplotlib scikit-learn
 
 ```
 
+## Repository Setup
+
+First, create a new folder for your repository in your preferred location and
+navigate into it:
+
+```sh
+mkdir gathering_dvc
+cd gathering_dvc
+
+```
+
+Initialize a Git repository by running:
+
+```sh
+git init 
+
+```
+
+Initialize DVC:
+
+```sh
+dvc init 
+
+# If environment is not activated you can do:
+uv run dvc init
+
+```
+
+This command creates a few hidden files that configure your DVC project. Have a
+look at them:
+
+```sh
+ls -l .dvc 
+
+```
+
+DVC automatically stages these newly added configuration files to your next Git
+commit. Let's check the status and commit them:
+
+```sh
+git status
+git commit -m "Initialize DVC"
+
+```
+
+
 ## Dataset Creation
 
 Now we are ready to create an example dataset to work with. Run the following
@@ -116,18 +120,12 @@ code to create, visualize, and save a "half-moon" dataset.
 script to finish executing and return you to the command prompt!)*
 
 ```sh
-python -c "import pandas as pd; import matplotlib.pyplot as plt; from sklearn.datasets import make_moons; X, y = make_moons(n_samples=1000, shuffle=True, noise=0.05, random_state=42); pd.DataFrame({'feature_1': X[:, 0], 'feature_2': X[:, 1], 'label': y}).to_csv('data.csv', index=False); plt.scatter(X[:, 0], X[:, 1], c=y, cmap='viridis', edgecolor='k'); plt.title('Make Moons Dataset'); plt.xlabel('Feature 1'); plt.ylabel('Feature 2'); plt.show()"
+python -c "import pandas as pd; import matplotlib.pyplot as plt; from sklearn.datasets import make_moons; from pathlib import Path; Path('./data/').mkdir(parents=False, exist_ok=True); X, y = make_moons(n_samples=1000, shuffle=True, noise=0.05, random_state=42); pd.DataFrame({'feature_1': X[:, 0], 'feature_2': X[:, 1], 'label': y}).to_csv('data/data.csv', index=False); plt.scatter(X[:, 0], X[:, 1], c=y, cmap='viridis', edgecolor='k'); plt.title('Make Moons Dataset'); plt.xlabel('Feature 1'); plt.ylabel('Feature 2'); plt.show()"
 
 ```
+Note: for all commands, if the env is not active and you are using uv, you need to use `uv run`
 
-This creates a file called `data.csv` in your root directory. Let's create a
-dedicated folder for our data and move the file there:
-
-```sh
-mkdir data
-mv data.csv data/data.csv
-
-```
+Now we created the file data.csv inside the `data` folder.
 
 ## Dataset Versioning
 
@@ -194,7 +192,7 @@ mkdir ~/Desktop/dvc_remote
 ```
 
 Now, set this folder up as the default storage remote for DVC. *(Make sure to
-replace the path if you are on Windows or Linux!)*:
+replace the path if you are on Windows)*:
 
 ```sh
 dvc remote add -d storage ~/Desktop/dvc_remote/
@@ -270,11 +268,8 @@ First, navigate into the data folder, run the new generation script (which uses
 root. *(Remember to close the plot window!)*:
 
 ```sh
-cd data
 
-python -c "import pandas as pd; import matplotlib.pyplot as plt; from sklearn.datasets import make_circles; X, y = make_circles(n_samples=1000, shuffle=True, noise=0.05, factor=0.5, random_state=42); pd.DataFrame({'feature_1': X[:, 0], 'feature_2': X[:, 1], 'label': y}).to_csv('data.csv', index=False); plt.scatter(X[:, 0], X[:, 1], c=y, cmap='viridis', edgecolor='k'); plt.title('Make Circles Dataset'); plt.xlabel('Feature 1'); plt.ylabel('Feature 2'); plt.axis('equal'); plt.show()"
-
-cd ..
+python -c "import pandas as pd; import matplotlib.pyplot as plt; from sklearn.datasets import make_circles; X, y = make_circles(n_samples=1000, shuffle=True, noise=0.05, factor=0.5, random_state=42); pd.DataFrame({'feature_1': X[:, 0], 'feature_2': X[:, 1], 'label': y}).to_csv('data/data.csv', index=False); plt.scatter(X[:, 0], X[:, 1], c=y, cmap='viridis', edgecolor='k'); plt.title('Make Circles Dataset'); plt.xlabel('Feature 1'); plt.ylabel('Feature 2'); plt.axis('equal'); plt.show()"
 
 ```
 
@@ -311,7 +306,7 @@ To prove that we can jump back and forth, here is a quick Python script to
 visually inspect whatever `data.csv` is currently in your workspace.
 
 ```sh
-# Run this from the root directory to see what data you currently have
+
 python -c "import pandas as pd; import matplotlib.pyplot as plt; df = pd.read_csv('data/data.csv'); plt.scatter(df['feature_1'], df['feature_2'], c=df['label'], cmap='viridis', edgecolor='k'); plt.title('Dataset Visualization from CSV'); plt.xlabel('Feature 1'); plt.ylabel('Feature 2'); plt.axis('equal'); plt.show()"
 
 ```
@@ -333,7 +328,7 @@ it was back then, and put it in my current directory."*
 Now that our pointer is looking at V1, we tell DVC to fetch the matching data:
 
 ```sh
-dvc pull
+dvc pull --force
 
 ```
 
