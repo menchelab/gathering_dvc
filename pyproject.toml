@@ -1,0 +1,12 @@
+[project]
+name = "gathering-dvc"
+version = "0.1.0"
+description = "Python requirements for the gathering on data version control with DVC"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dvc>=3.66.1",
+    "matplotlib>=3.10.8",
+    "pandas>=3.0.1",
+    "scikit-learn>=1.8.0",
+]
