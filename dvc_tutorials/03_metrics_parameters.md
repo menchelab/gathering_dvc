@@ -190,11 +190,3 @@ two runs. You instantly know if your parameter change improved or degraded the
 model!
 
 Make sure to add the experiment to git for tracking.
-
-## 8. Tracking Plots
-
-TODO!
-
-## 9. Running Multiple Experiments
-
-TODO!
