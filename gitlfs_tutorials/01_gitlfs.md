@@ -56,8 +56,19 @@ git init
 
 ## Tracking Large Files
 
-Tell Git LFS which file types (or specific files) to track. For example, to
-track all CSV files and model weights:
+First let's create the data (first create your environment).
+
+```sh
+python -c "from sklearn.datasets import fetch_california_housing; import numpy as np; from pathlib import Path; housing = fetch_california_housing(); Path('./data/').mkdir(parents=False, exist_ok=True); np.savetxt('data/housing_data.txt', housing['data'])"
+```
+
+Tell Git LFS which file types (or specific files) to track. 
+
+```sh
+git lfs track "data/housing_data.txt"
+```
+
+Or we could directly to track all CSV files and model weights:
 
 ```sh
 git lfs track "*.csv"
@@ -75,7 +86,7 @@ git commit -m "Configure Git LFS tracking"
 Now add your large file as you normally would with Git:
 
 ```sh
-git add data/data.csv
+git add data/housing_data.txt
 git commit -m "Add dataset via Git LFS"
 ```
 
@@ -96,8 +107,8 @@ To confirm that a file is stored as a pointer (and not the raw content) in Git,
 inspect it:
 
 ```sh
-cat data/data.csv   # shows the actual content locally (LFS downloads it)
-git show HEAD:data/data.csv   # shows the LFS pointer stored in Git
+cat data/housing_data.txt   # shows the actual content locally (LFS downloads it)
+git show HEAD:data/housing_data.txt   # shows the LFS pointer stored in Git
 ```
 
 ---
