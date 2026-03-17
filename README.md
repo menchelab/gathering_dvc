@@ -26,7 +26,7 @@ Several tools exist to handle large files and data assets alongside Git. Git usu
 **Strengths:** Seamless Git integration
 **Limitations:** Storage and bandwidth quotas on most platforms; the LFS server must stay available; not designed for frequently-changing large datasets.
 
-### git-annex
+### git-annex (not explained here)
 
 [git-annex](https://git-annex.branchable.com/) takes a more decentralized approach. Files are replaced with symbolic links, and their contents can be synced across a flexible set of backends (SSH, S3, rsync, etc.) with fine-grained control over which copies live where.
 
@@ -57,13 +57,42 @@ Dedicated archival repositories solve this by providing **persistent identifiers
 
 [Zenodo](https://zenodo.org/) is a general-purpose open-access research data repository hosted by CERN. Code, datasets, and other research outputs are uploaded as versioned releases and receive a permanent DOI, making them citable and reliably accessible long after a project's active development ends.
 
-**Strengths:** Free, persistent, citable—ideal for publishing research datasets and code alongside papers. Integrates directly with GitHub to archive a repository snapshot at release time.
+**Strengths:** Free, persistent, citable. Good for publishing research datasets and code alongside papers. Integrates directly with GitHub to archive a repository snapshot at release time.
 **Limitations:** Not designed for iterative workflows; each upload is a separate release rather than a diff; not integrated with local development tooling.
 
 
 ## Organization
 
-Go through the tutorials.
+### Python Environment Setup
+
+**If you use `uv`:**
+
+```sh
+uv init 
+uv add pandas matplotlib scikit-learn
+source .venv/bin/activate
+
+```
+*Note: It is not neccesary to activate the environment but remember to use uv run.*
+
+
+**If you use `conda`:**
+
+```sh
+conda create -n myenv python=3.10
+conda activate myenv
+conda install -c conda-forge pandas matplotlib scikit-learn
+
+```
+
+**If you use `venv`:**
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+pip install pandas matplotlib scikit-learn
+
+```
 
 
 This is the structure of the project with all tutorials.
@@ -88,6 +117,10 @@ gathering_dvc/
 Git LFS mainly works like git. There is only one tutorial.
 
 
+| # | File | Topic |
+|---|------|-------|
+| 1 | `01_gitlfs.md` | Install Git lfs, setup a lfs remote, recover lost data, lock files. |
+
 ## DVC Tutorials
 
 The tutorials are designed to be followed in order. Each one builds on the previous.
@@ -95,15 +128,16 @@ The tutorials are designed to be followed in order. Each one builds on the previ
 | # | File | Topic |
 |---|------|-------|
 | 1 | `01_dvc_basics.md` | Installing DVC, initializing a project, versioning a dataset, configuring a remote, and switching between data versions. |
+| 1 | `01_dvc_basics.md` | Installing DVC, initializing a project, versioning a dataset, configuring a remote, and switching between data versions. |
 | 2 | `02_pipelines.md` | Defining a DVC pipeline stage, running it with `dvc repro`, understanding caching and the `dvc.lock` file, and visualizing the DAG. |
 | 3 | `03_metrics_parameters.md` | Externalizing hyperparameters to `params.yaml`, saving metrics to `metrics.json`, running experiments, and comparing runs with `dvc metrics diff` and `dvc params diff`. |
 
----
+
 
 ## Expected Outcome
 
 Learn about data version control, hopefully include some tool in one of your projects :)
----
+
 
 ## Sources
 
@@ -111,5 +145,5 @@ Learn about data version control, hopefully include some tool in one of your pro
 - [Git LFS Documentation](https://git-lfs.com/)
 - [git-annex Documentation](https://git-annex.branchable.com/)
 - [Zenodo](https://zenodo.org/)
-- [git lfs tutorial](https://www.atlassian.com/git/tutorials/git-lfs)
+- [git lfs tutorial](https://github.com/git-lfs/git-lfs/wiki/Tutorial)
 - [The Turing Way – Version Control for Data](https://the-turing-way.netlify.app/reproducible-research/vcs)
