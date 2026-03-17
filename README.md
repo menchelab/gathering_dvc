@@ -129,7 +129,7 @@ The tutorials are designed to be followed in order. Each one builds on the previ
 
 | # | File | Topic |
 |---|------|-------|
-| 1 | `01_dvc_basics.md` | Installing DVC, initializing a project, versioning a dataset, configuring a remote, and switching between data versions. |
+| 1 | `00_dvc_cheatsheet.md` | DVC cheatsheet. |
 | 1 | `01_dvc_basics.md` | Installing DVC, initializing a project, versioning a dataset, configuring a remote, and switching between data versions. |
 | 2 | `02_pipelines.md` | Defining a DVC pipeline stage, running it with `dvc repro`, understanding caching and the `dvc.lock` file, and visualizing the DAG. |
 | 3 | `03_metrics_parameters.md` | Externalizing hyperparameters to `params.yaml`, saving metrics to `metrics.json`, running experiments, and comparing runs with `dvc metrics diff` and `dvc params diff`. |
