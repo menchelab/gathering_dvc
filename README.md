@@ -24,6 +24,7 @@ Several tools exist to handle large files and data assets alongside Git. Git usu
 [Git Large File Storage](https://git-lfs.com/) is an official Git extension that replaces large files in a repository with lightweight text pointers, while storing the actual content on a separate LFS server (GitHub, GitLab, self-hosted, etc.).
 
 **Strengths:** Seamless Git integration
+
 **Limitations:** Storage and bandwidth quotas on most platforms; the LFS server must stay available; not designed for frequently-changing large datasets.
 
 ### git-annex (not explained here)
@@ -31,7 +32,8 @@ Several tools exist to handle large files and data assets alongside Git. Git usu
 [git-annex](https://git-annex.branchable.com/) takes a more decentralized approach. Files are replaced with symbolic links, and their contents can be synced across a flexible set of backends (SSH, S3, rsync, etc.) with fine-grained control over which copies live where.
 
 **Strengths:** Very powerful and flexible; designed for offline and distributed workflows; handles arbitrarily large files.
-**Limitations:** Steep learning curve; less friendly to non-technical collaborators; tooling ecosystem is smaller.
+
+**Limitations:** Steep learning curve; less user friendly; tooling ecosystem is smaller.
 
 ### DVC
 
@@ -45,19 +47,19 @@ Several tools exist to handle large files and data assets alongside Git. Git usu
 
 **Limitations:** Adds tooling complexity; requires a configured remote storage location.
 
----
 
 ## Hosting code and data for long-term access
 
-Versioning data during active development is only part of the problem. Once a project is complete or a paper is published, the code and data need to remain accessible—sometimes for years or decades. Relying solely on platforms like GitHub for this is risky: repositories can be deleted, renamed, made private, or simply go unmaintained. A GitHub link in a published paper may be broken within months, making results impossible to reproduce.
+Versioning data during active development is only part of the problem. Once a project is complete or a paper is published, the code and data need to remain accessible—sometimes for years or decades. Relying solely on platforms like GitHub for this is risky: repositories can be deleted, renamed, made private, or simply go unmaintained. Think of all the broken Github links you have encountered :broken_heart:. To solve this we can use tools that archive your data and code forever!
 
 Dedicated archival repositories solve this by providing **persistent identifiers** (such as DOIs) and guarantees of long-term storage, independent of any individual developer's account.
 
-### Zenodo
+### Zenodo (not explained here)
 
 [Zenodo](https://zenodo.org/) is a general-purpose open-access research data repository hosted by CERN. Code, datasets, and other research outputs are uploaded as versioned releases and receive a permanent DOI, making them citable and reliably accessible long after a project's active development ends.
 
 **Strengths:** Free, persistent, citable. Good for publishing research datasets and code alongside papers. Integrates directly with GitHub to archive a repository snapshot at release time.
+
 **Limitations:** Not designed for iterative workflows; each upload is a separate release rather than a diff; not integrated with local development tooling.
 
 
@@ -93,21 +95,21 @@ source .venv/bin/activate
 pip install pandas matplotlib scikit-learn
 
 ```
+### Repo structure
 
-
-This is the structure of the project with all tutorials.
+This is the structure of the project.
 
 ```
 gathering_dvc/
 ├── README.md                        # This file
-├── pyproject.tml                    # All python requirements
+├── pyproject.toml                    # All python requirements
 ├── dvc_tutorials/
 │   ├── 00_dvc_cheatsheet.md
-│   ├── 01_dvc_basics.md             # Tutorial 1: versioning files with DVC
-│   ├── 02_pipelines.md              # Tutorial 2: building reproducible pipelines
-│   └── 03_metrics_parameters.md     # Tutorial 3: tracking experiments, params, and metrics
+│   ├── 01_dvc_basics.md             
+│   ├── 02_pipelines.md              
+│   └── 03_metrics_parameters.md     
 └── gitlfs_tutorials/
-    └── 01_gitlfs.md
+    └── 01_gitlfs.md                 
 ```
 
 ---
@@ -141,9 +143,10 @@ Learn about data version control, hopefully include some tool in one of your pro
 
 ## Sources
 
+- [The Turing Way – Version Control for Data](https://the-turing-way.netlify.app/reproducible-research/vcs)
 - [DVC Documentation](https://dvc.org/doc)
 - [Git LFS Documentation](https://git-lfs.com/)
 - [git-annex Documentation](https://git-annex.branchable.com/)
 - [Zenodo](https://zenodo.org/)
 - [git lfs tutorial](https://github.com/git-lfs/git-lfs/wiki/Tutorial)
-- [The Turing Way – Version Control for Data](https://the-turing-way.netlify.app/reproducible-research/vcs)
+
