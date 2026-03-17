@@ -93,6 +93,15 @@ git commit -m "Add dataset via Git LFS"
 Git LFS automatically intercepts the add, stores the file content in the LFS
 cache, and commits only the pointer to Git.
 
+In practice, this means two different things are versioned:
+
+- GitHub (Git remote): commits, source code, `.gitattributes`, and tiny LFS
+	pointer files.
+- LFS remote: the real large file bytes (datasets, model weights, binaries).
+
+This split is the key idea of Git LFS: your Git history stays lightweight,
+while large assets still remain reproducible and versioned.
+
 ---
 
 ## Verifying Tracking
@@ -113,32 +122,103 @@ git show HEAD:data/housing_data.txt   # shows the LFS pointer stored in Git
 
 ---
 
-## Pushing and Pulling
+## Local endpoint: remove and recover data
 
-Push both Git commits and LFS objects to the remote:
-
-```sh
-git push origin main
-```
-
-Git LFS objects are uploaded automatically alongside the regular push.
-
-When cloning a repository that uses Git LFS, the large files are downloaded
-automatically:
+By default, Git LFS uses your Git remote as the LFS server. You can inspect the
+current setup with:
 
 ```sh
-git clone <repo-url>
+git lfs env
 ```
 
-To manually fetch LFS objects for the current commit (e.g. after a bare clone):
+For a simple test, point LFS to a folder on your machine:
+
+```sh
+mkdir -p /tmp/lfs-remote
+git init --bare /tmp/lfs-remote
+git config remote.origin.lfsurl file:///tmp/lfs-remote/
+git config lfs.url file:///tmp/lfs-remote/
+```
+
+```sh
+git config remote.origin.lfspushurl file:///tmp/lfs-remote/
+```
+You can verify the change by using `git lfs env` and checking the `Endpoint` field.
+
+
+Now push your LFS objects to that endpoint:
+
+```sh
+git lfs push --all origin
+```
+
+Simulate data loss on your machine by removing the file and local LFS cache:
+
+```sh
+rm data/housing_data.txt
+rm -rf .git/lfs/objects
+```
+
+Recover the file from the local endpoint:
 
 ```sh
 git lfs pull
 ```
 
+`git lfs pull` downloads the missing LFS objects and restores files for the
+current checkout.
+
 ---
 
-## Key Points
+## File locking
+
+File locking is useful for files that should not be edited by multiple
+people at the same time.
+
+Why it matters in teams: for binary assets, merges are often impossible or
+unsafe. Locking prevents two people from modifying the same large file in
+parallel and discovering the conflict only at push time.
+
+On platforms such as Bitbucket, a locked file can usually be unlocked only by
+the person who created the lock.
+If you try to lock, unlock, push, or merge a file locked by someone else, the
+error message typically includes the lock owner details so you can contact
+them. You can also list all locks in the repository.
+
+Important: locking does not work with `file://` endpoints (like
+`file:///tmp/lfs-remote/`). Locks require an LFS API server over HTTP(S)
+(GitHub, GitLab, Bitbucket, self-hosted LFS server, etc.).
+
+If your LFS endpoint is local `file://`, skip locking.
+
+To use locking, point LFS back to an API-backed remote and then lock:
+
+```sh
+git config --unset remote.origin.lfsurl
+git config --unset remote.origin.lfspushurl
+git config --unset lfs.url
+git lfs locks
+```
+
+Lock a file before editing:
+
+```sh
+git lfs lock data/housing_data.txt
+```
+
+List active locks:
+
+```sh
+git lfs locks
+```
+
+Unlock:
+
+```sh
+git lfs unlock data/housing_data.txt
+```
+
+## Key points
 
 | Concept | detail |
 |---------|--------|
@@ -146,3 +226,4 @@ git lfs pull
 | LFS server | Stores the actual file content (GitHub, GitLab, self-hosted, etc.) |
 | `.gitattributes` | Records which patterns are tracked by LFS — must be committed |
 | `git lfs install` | One-time setup per machine to activate LFS hooks |
+| `git lfs lock` | Prevents concurrent edits on lockable files |
